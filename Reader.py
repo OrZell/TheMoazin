@@ -1,15 +1,7 @@
-from os import lstat
-
-from dotenv import load_dotenv, find_dotenv
 import datetime
 import pathlib
-import pprint
-import json
-import time
 import os
 
-
-load_dotenv(find_dotenv())
 
 class Reader:
 
@@ -42,7 +34,7 @@ class Reader:
 
             dct_with_details[subdir.name]['Metadata'] = details
             dct_with_details[subdir.name]['File Path'] = os.path.abspath(subdir)
-        list_of_metadata_and_path = [x.value for x in dct_with_details]
+        list_of_metadata_and_path = [dct_with_details[x] for x in dct_with_details]
         return list_of_metadata_and_path
 
 
