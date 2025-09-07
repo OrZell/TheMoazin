@@ -1,3 +1,5 @@
+from os import lstat
+
 from dotenv import load_dotenv, find_dotenv
 import datetime
 import pathlib
@@ -14,12 +16,9 @@ class Reader:
     def __init__(self):
         self.MainDirPath = os.getenv('MAIN_DATA_PATH')
 
-    @staticmethod
-    def convert_list_items_to_json(dct:dict, order_items:bool=False):
-        lst = [json.dumps(x) for x in dct.values()]
-        if order_items:
-            sorted_lst = sorted(lst, )
-        return lst
+    def get_list_of_details(self):
+        lst_of_details = self.loop_through_path_and_create_dct_of_details()
+        return lst_of_details
 
     def loop_through_path_and_create_dct_of_details(self):
         if self.MainDirPath is None:
@@ -31,17 +30,20 @@ class Reader:
         for subdir in path.iterdir():
             stats = os.stat(subdir)
 
+            dct_with_details[subdir.name] = {}
+
             details = {
                 'File Name': subdir.name,
-                'File Path': os.path.abspath(subdir),
                 'Size (KB)': self.formating_file_size_to_kbs(stats.st_size),
                 'Creation Date': self.formating_time_kinds(stats.st_ctime),
                 'Modified Date': self.formating_time_kinds(stats.st_mtime),
                 'Last Access Date': self.formating_time_kinds(stats.st_atime),
             }
 
-            dct_with_details[subdir.name] = details
-        return dct_with_details
+            dct_with_details[subdir.name]['Metadata'] = details
+            dct_with_details[subdir.name]['File Path'] = os.path.abspath(subdir)
+        list_of_metadata_and_path = [x.value for x in dct_with_details]
+        return list_of_metadata_and_path
 
 
     @staticmethod
@@ -53,7 +55,3 @@ class Reader:
     def formating_file_size_to_kbs(file_size):
         size_as_kbs = format(file_size / 1024, ".2f")
         return size_as_kbs + " KB"
-
-f = Reader()
-print(f.convert_list_items_to_json(f.loop_through_path_and_create_dct_of_details()))
-
