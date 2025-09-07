@@ -1,4 +1,4 @@
-from Kafka.Kafka import Kafka
+from DALs.Kafka import Kafka
 from dotenv import load_dotenv, find_dotenv
 from Reader import Reader
 import os
