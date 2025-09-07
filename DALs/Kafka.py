@@ -1,9 +1,6 @@
 from kafka import KafkaProducer, KafkaConsumer
-from dotenv import load_dotenv, find_dotenv
 import json
 import os
-
-load_dotenv(find_dotenv())
 
 class Kafka:
 

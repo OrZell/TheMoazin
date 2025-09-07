@@ -1,5 +1,4 @@
 from elasticsearch import Elasticsearch, helpers
-from dotenv import find_dotenv, load_dotenv
 import os
 
 
@@ -7,7 +6,6 @@ import os
 class Elastic:
 
     def __init__(self):
-        load_dotenv(find_dotenv())
         self.Host = os.getenv('ELASTICSEARCH_HOTS')
         self.Port = os.getenv('ELASTICSEARCH_PORT')
         self.ConnectString = os.getenv('ELASTICSEARCH_CONNECTION_STRING')

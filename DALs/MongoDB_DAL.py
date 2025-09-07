@@ -1,11 +1,9 @@
-from dotenv import find_dotenv, load_dotenv
 from pymongo import MongoClient
 import os
 
 class MongoDB_DAL:
 
     def __init__(self):
-        load_dotenv(find_dotenv())
         self.HOST = os.getenv('MONGODB_HOST')
         self.PORT = os.getenv('MONGODB_PORT')
         self.ConnectionString = os.getenv('MONGODB_CONNECTION_STRING')
@@ -24,6 +22,10 @@ class MongoDB_DAL:
         if self.connection:
             self.connection.close()
             self.connection = None
+
+    def get_database(self):
+        connection = self.open_connection()
+        return connection[self.DB]
 
     def insert_one(self, doc):
         connection = self.open_connection()
