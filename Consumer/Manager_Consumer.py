@@ -1,5 +1,6 @@
 from DALs.ElasticSearch_DAL import Elastic
 from DALs.MongoDB_DAL import MongoDB_DAL
+from Models.Logger import Logger
 from DALs.Kafka import Kafka
 import hashlib
 import json
@@ -12,6 +13,7 @@ class Manager:
         self.Kafka = Kafka() # instance of Kafka class
         self.Elastic = Elastic() # instance of Elasticsearch class
         self.MongoDB = MongoDB_DAL() # instance of MongoDB DAL
+        self.Logger = Logger.get_logger() # Gets the logger with connection to es
 
         self.Topic = os.getenv('KAFKA_FIRST_PUBLISH_TOPIC') # MainDirPath holds the var of the env MAIN_DATA_PATH
                                                             # that means the path of the main podcats dir
@@ -21,20 +23,30 @@ class Manager:
     # the main method that get the events from the known topic manipulate them, index
     # the files details in elasticsearch and insert the files in mongodb using GridFS
     def run(self):
+        self.Logger.info('Service Consumer Started')
         self.Elastic.create_index()
         events = self.Kafka.get_consumer_events(topic=[self.Topic])
+        self.Logger.info(f'Start Listen to topic {self.Topic}')
 
         for event in events:
             # print(event)
             # continue
             event = event.value
-            print(event)
             self.generate_unique_id(event)
 
             elastic_doc = self.create_elastic_doc_from_event(event)
 
-            self.Elastic.insert_one(elastic_doc)
-            self.insert_wav_to_mongodb(event)
+            try:
+                self.Elastic.insert_one(elastic_doc)
+                self.Logger.info(f'Insert doc to Elasticsearch id-{event['id']}')
+            except:
+                self.Logger.error(f'Field to insert the doc id - {event['id']} to Elasticsearch')
+
+            try:
+                self.insert_wav_to_mongodb(event)
+                self.Logger.info(f'Insert doc to MongoDB id-{event['id']}')
+            except:
+                self.Logger.error(f'Field to insert the doc id - {event['id']} to MongoDB')
 
 
     @staticmethod

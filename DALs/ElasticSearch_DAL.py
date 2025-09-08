@@ -1,4 +1,5 @@
 from elasticsearch import Elasticsearch, helpers
+from Models.Logger import Logger
 import os
 
 
@@ -6,31 +7,34 @@ import os
 class Elastic:
 
     def __init__(self):
-        self.Host = os.getenv('ELASTICSEARCH_HOTS')
+        self.Logger = Logger.get_logger() # Gets the logger with connection to es
+        self.Host = os.getenv('ELASTICSEARCH_HOST')
         self.Port = os.getenv('ELASTICSEARCH_PORT')
         self.ConnectString = os.getenv('ELASTICSEARCH_CONNECTION_STRING')
-        self.IndexName = os.getenv('ELASTICSEARCH_INDEX')
+        self.IndexName = os.getenv('ELASTICSEARCH_DOCS_INDEX')
 
         self.connection = None
 
         self.Map = {
-            'properties': {
-                'id': {'type': 'keyword'},
-                'text': {'type': 'text'},
-                'name': {'type': 'keyword'},
-                'file_path': {'type': 'keyword'},
-                'size': {'type': 'integer'},
-                'create_date': {
-                    'type': 'datetime',
-                    'format': 'yyyy-MM-dd HH:mm:ss'
-                },
-                'modified_date': {
-                    'type': 'datetime',
-                    'format': 'yyyy-MM-dd HH:mm:ss'
-                },
-                'last_access': {
-                    'type': 'datetime',
-                    'format': 'yyyy-MM-dd HH:mm:ss'
+            'mappings': {
+                'properties': {
+                    'id': {'type': 'keyword'},
+                    'text': {'type': 'text'},
+                    'name': {'type': 'keyword'},
+                    'file_path': {'type': 'keyword'},
+                    'size': {'type': 'keyword'},
+                    'create_date': {
+                        'type': 'date',
+                        'format': 'yyyy-MM-dd HH:mm:ss'
+                    },
+                    'modified_date': {
+                        'type': 'date',
+                        'format': 'yyyy-MM-dd HH:mm:ss'
+                    },
+                    'last_access': {
+                        'type': 'date',
+                        'format': 'yyyy-MM-dd HH:mm:ss'
+                    }
                 }
             }
         }
@@ -48,7 +52,8 @@ class Elastic:
     def create_index(self):
         connection = self.open_connection()
         if not connection.indices.exists(index=self.IndexName):
-            connection.indices.create(index=self.IndexName)
+            connection.indices.create(index=self.IndexName, body=self.Map)
+            self.Logger.info(f'Create Index {self.IndexName}')
         self.close_connection()
 
     def insert_one(self, doc):
