@@ -1,5 +1,7 @@
 from pymongo import MongoClient
+import gridfs
 import os
+
 
 class MongoDB_DAL:
 
@@ -12,6 +14,7 @@ class MongoDB_DAL:
         self.Collection = os.getenv('MONGODB_COLLECTION')
 
         self.connection = None
+        self.fs = None
 
     def open_connection(self):
         if self.connection is None:
@@ -23,9 +26,16 @@ class MongoDB_DAL:
             self.connection.close()
             self.connection = None
 
-    def get_database(self):
-        connection = self.open_connection()
-        return connection[self.DB]
+    def get_fs(self):
+        if self.fs is None:
+            connection = self.open_connection()
+            self.fs = gridfs.GridFS(connection[self.DB])
+        return self.fs
+
+    def close_fs(self):
+        if self.fs:
+            self.close_connection()
+            self.fs = None
 
     def insert_one(self, doc):
         connection = self.open_connection()
@@ -40,7 +50,7 @@ class MongoDB_DAL:
     def read_one(self, field, value, query=None):
 
         # field is the field in the document that you want to search the value in
-        # value is the the value that you want to in the field
+        # value is the value that you want to in the field
 
         if query is None:
             query = {field: value}

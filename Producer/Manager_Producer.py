@@ -7,7 +7,7 @@ class Manager:
     def __init__(self):
         self.Reader = Reader()
         self.Kafka = Kafka()
-        self.Topic = os.getenv('KAFKA_FIRST_PUBLISH')
+        self.Topic = os.getenv('KAFKA_FIRST_PUBLISH_TOPIC')
 
     def publish_the_jsons(self):
         jsons = self.Reader.get_list_of_details()
