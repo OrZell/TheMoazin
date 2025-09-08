@@ -63,6 +63,17 @@ class Elastic:
 
         self.close_connection()
 
+    def fetch_all(self):
+        connection = self.open_connection()
+
+        query = {
+            'match_all': {}
+        }
+
+        result = connection.search(index=self.IndexName, query=query, size=1000)
+        self.close_connection()
+        return result
+
     def search_word_in_text(self, word):
         connection = self.open_connection()
 
@@ -87,6 +98,19 @@ class Elastic:
                 '_op_type': 'delete',
                 '_index': self.IndexName,
                 '_id': doc['_id']
+            })
+
+        helpers.bulk(connection, new_docs)
+
+    def insert_list_of_docs(self, docs:dict):
+        connection = self.open_connection()
+
+        new_docs = []
+        for doc in docs:
+            new_docs.append({
+                '_index': self.IndexName,
+                '_id': doc,
+                '_source': docs[doc]
             })
 
         helpers.bulk(connection, new_docs)
