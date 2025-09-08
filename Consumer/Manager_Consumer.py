@@ -9,14 +9,17 @@ import os
 class Manager:
 
     def __init__(self):
-        self.Kafka = Kafka()
-        self.Elastic = Elastic()
-        self.MongoDB = MongoDB_DAL()
+        self.Kafka = Kafka() # instance of Kafka class
+        self.Elastic = Elastic() # instance of Elasticsearch class
+        self.MongoDB = MongoDB_DAL() # instance of MongoDB DAL
 
-        self.Topic = os.getenv('KAFKA_FIRST_PUBLISH_TOPIC')
+        self.Topic = os.getenv('KAFKA_FIRST_PUBLISH_TOPIC') # MainDirPath holds the var of the env MAIN_DATA_PATH
+                                                            # that means the path of the main podcats dir
 
 
 
+    # the main method that get the events from the known topic manipulate them, index
+    # the files details in elasticsearch and insert the files in mongodb using GridFS
     def run(self):
         self.Elastic.create_index()
         events = self.Kafka.get_consumer_events(topic=[self.Topic])
@@ -35,12 +38,14 @@ class Manager:
 
 
     @staticmethod
+    #generate unique md5 id each file using hashlib library
     def generate_unique_id(event:dict):
         md5_hash = hashlib.md5(json.dumps(event, sort_keys=True).encode('utf8')).hexdigest()
         event['id'] = md5_hash
 
     @staticmethod
-    def create_elastic_doc_from_event(event):
+    # create doc that stands for the fields in the elasticsearch
+    def create_elastic_doc_from_event(event) -> dict:
         elastic_doc = {
             'id': event['id'],
             'name': event['metadata']['file_name'],
@@ -53,7 +58,8 @@ class Manager:
 
         return elastic_doc
 
-
+    # open the file based on the file path from the event then upload
+    # it mongo using GridFS
     def insert_wav_to_mongodb(self, event):
         fs = self.MongoDB.get_fs()
         file_id, file_path = event['id'], event['file_path']
