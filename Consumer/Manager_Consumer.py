@@ -37,7 +37,7 @@ class Manager:
             elastic_doc = self.create_elastic_doc_from_event(event)
 
             try:
-                self.Elastic.insert_one(elastic_doc)
+                self.Elastic.insert_one_with_id(doc=elastic_doc, id=elastic_doc['id'])
                 self.Logger.info(f'Insert doc to Elasticsearch id-{event['id']}')
             except:
                 self.Logger.error(f'Field to insert the doc id - {event['id']} to Elasticsearch')

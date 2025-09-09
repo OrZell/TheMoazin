@@ -6,9 +6,9 @@ import os
 class Manager:
 
     def __init__(self):
+        self.Logger = Logger.get_logger() # Gets the logger with connection to es
         self.Reader = Reader() # instance of the Reader class
         self.Kafka = Kafka() # instance of Kafka class
-        self.Logger = Logger.get_logger() # Gets the logger with connection to es
         self.Topic = os.getenv('KAFKA_FIRST_PUBLISH_TOPIC') # MainDirPath holds the var of the env MAIN_DATA_PATH
                                                             # that means the path of the main podcats dir
 
