@@ -1,0 +1,17 @@
+FROM python:slim
+LABEL authors="Or"
+
+
+WORKDIR /app
+RUN apt-get update
+RUN apt-get install libasound-dev libportaudio2 libportaudiocpp0 portaudio19-dev -y
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY Consumer ./Consumer
+COPY DALs/ElasticSearch_DAL.py ./DALs
+COPY DALs/MongoDB_DAL.py ./DALs
+COPY DALs/Kafka.py ./DALs
+COPY Models/Logger.py ./Models
+COPY .env .
+
+CMD ["python", "./Consumer/mainConsumer.py"]
