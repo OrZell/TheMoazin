@@ -63,6 +63,13 @@ class Elastic:
 
         self.close_connection()
 
+    def insert_one_with_id(self, doc, id):
+        connection = self.open_connection()
+
+        connection.index(index=self.IndexName, body=doc, id=id)
+
+        self.close_connection()
+
     def fetch_all(self):
         connection = self.open_connection()
 
