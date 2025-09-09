@@ -28,6 +28,7 @@ class Manager:
     # fetch doc from mongo by the id
     def fetch_doc_from_mongo_by_id(self, id):
         fs = self.MongoDAL.get_fs()
+        audio_file = None
         try:
             audio_file = fs.find_one({'file_id': id})
             self.Logger.info(f'Fetch doc from Mongo successed doc_id - {id}')

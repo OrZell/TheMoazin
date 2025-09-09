@@ -20,6 +20,9 @@ class Elastic:
                 'properties': {
                     'id': {'type': 'keyword'},
                     'text': {'type': 'text'},
+                    'bds_precent': {'type': 'float'},
+                    'is_bds': {'type': 'boolean'},
+                    'bds_thread_level': {'type': 'keyword'},
                     'name': {'type': 'keyword'},
                     'file_path': {'type': 'keyword'},
                     'size': {'type': 'keyword'},
