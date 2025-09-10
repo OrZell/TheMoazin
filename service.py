@@ -33,7 +33,8 @@ def send_the_docs_is_bds():
         }
     }
     docs = elastic.search_by_query(query)['hits']['hits']
-    return docs
+    new_docs = [doc['_source'] for doc in docs]
+    return new_docs
 
 @app.get('/high_thread_level')
 # returns all the docs that thread_level high
@@ -46,7 +47,8 @@ def send_the_docs_thread_level_high():
         }
     }
     docs = elastic.search_by_query(query)['hits']['hits']
-    return docs
+    new_docs = [doc['_source'] for doc in docs]
+    return new_docs
 
 @app.get('/middle_thread_level')
 # returns all the docs that thread_level middle
@@ -59,13 +61,16 @@ def send_the_docs_thread_level_middle():
         }
     }
     docs = elastic.search_by_query(query)['hits']['hits']
-    return docs
+    new_docs = [doc['_source'] for doc in docs]
+    return new_docs
 
 @app.get('/all_logs')
 # returns all the logs
 def get_all_logs():
     docs = elastic.fetch_all_from_logs()['hits']['hits']
-    return docs
+    new_docs = [doc['_source'] for doc in docs]
+    new_docs = sorted(new_docs, key=lambda doc: doc['timestamp'])
+    return new_docs
 
 
 @app.get('/doc_logs')
@@ -79,7 +84,9 @@ def get_logs_of_doc_by_id(doc_id):
         }
     }
     docs = elastic.search_by_query_in_logs(query)['hits']['hits']
-    return docs
+    new_docs = [doc['_source'] for doc in docs]
+    new_docs = sorted(new_docs, key=lambda doc: doc['timestamp'])
+    return new_docs
 
 
 if __name__ == '__main__':
