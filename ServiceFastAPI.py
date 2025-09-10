@@ -1,4 +1,4 @@
-from DALs.ElasticSearch_DAL import Elastic
+from ElasticSearch_DAL import Elastic
 from fastapi import FastAPI
 import uvicorn
 

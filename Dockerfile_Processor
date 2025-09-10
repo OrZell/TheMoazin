@@ -1,0 +1,16 @@
+FROM python:slim
+LABEL authors="Or"
+
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY Processor ./Processor
+COPY DALs/ElasticSearch_DAL.py ./DALs
+COPY DALs/MongoDB_DAL.py ./DALs
+COPY Models/Logger.py ./Models
+COPY Models/Processor.py ./Models
+COPY Models/STT.py ./Models
+COPY .env .
+
+CMD ["python", "./Processor/mainProcessor.py"]

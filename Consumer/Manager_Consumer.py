@@ -1,7 +1,7 @@
-from DALs.ElasticSearch_DAL import Elastic
-from DALs.MongoDB_DAL import MongoDB_DAL
-from Models.Logger import Logger
-from DALs.Kafka import Kafka
+from ElasticSearch_DAL import Elastic
+from MongoDB_DAL import MongoDB_DAL
+from Logger import Logger
+from Kafka import Kafka
 import hashlib
 import json
 import os

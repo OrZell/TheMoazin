@@ -1,0 +1,7 @@
+FROM python:slim
+LABEL authors="Or"
+
+WORKDIR /app
+COPY semple.py .
+
+CMD ["python", "./semple.py"]

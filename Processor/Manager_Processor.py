@@ -1,8 +1,8 @@
-from DALs.ElasticSearch_DAL import Elastic
-from DALs.MongoDB_DAL import MongoDB_DAL
-from Models.Processor import Processor
-from Models.Logger import Logger
-from Models.STT import STT
+from ElasticSearch_DAL import Elastic
+from MongoDB_DAL import MongoDB_DAL
+from Processor import Processor
+from Logger import Logger
+from STT import STT
 
 class Manager:
 

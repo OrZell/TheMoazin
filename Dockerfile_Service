@@ -1,0 +1,12 @@
+FROM python:slim
+LABEL authors="Or"
+
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY ServiceFastAPI.py .
+COPY DALs/ElasticSearch_DAL.py ./DALs
+COPY .env .
+
+CMD ["python", "./ServiceFastAPI.py"]

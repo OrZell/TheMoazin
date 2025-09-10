@@ -1,8 +1,6 @@
-from operator import index
-
 from configuerations import ELASTICSEARCH_DOCS_INDEX_MAP
 from elasticsearch import Elasticsearch, helpers
-from Models.Logger import Logger
+from Logger import Logger
 import os
 
 

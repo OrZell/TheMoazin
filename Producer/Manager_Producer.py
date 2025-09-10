@@ -1,6 +1,6 @@
-from Models.Reader import Reader
-from Models.Logger import Logger
-from DALs.Kafka import Kafka
+from Reader import Reader
+from Logger import Logger
+from Kafka import Kafka
 import os
 
 class Manager:

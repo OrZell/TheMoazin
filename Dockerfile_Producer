@@ -5,15 +5,12 @@ LABEL authors="Or"
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY Consumer .
-COPY DALs/ElasticSearch_DAL.py .
-COPY DALs/MongoDB_DAL.py .
-COPY Models/Logger.py .
+COPY Producer/mainProducer.py .
+COPY Producer/Manager_Producer.py .
 COPY DALs/Kafka.py .
-COPY configuerations.py .
+COPY Models/Reader.py .
 COPY Models/Logger.py .
-
-
+COPY DALs/ElasticSearch_DAL.py .
 COPY .env .
 
-CMD ["python", "./mainConsumer.py"]
+CMD ["python", "./mainProducer.py"]
