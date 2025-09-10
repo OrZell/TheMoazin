@@ -14,6 +14,14 @@ the service fetch all the docs from elastic, run over them and every doc it fetc
 audio data from mongodb, recognize the text from the audio add field text to the doc <br>
 and assign the text to the field, calculate the BDS details and send it back to elastic.
 
+## ServiceFastAPI
+service to endpoint to receive data from elastic, got five routes:<br>
+_/is_bds_ - returns all the docs who is_bds field is True<br>
+_/high_thread_level_ - returns all the docs who bds_thread_level is high<br>
+_/middle_thread_level_ - returns all the docs who bds_thread_level is middle<br>
+_/all_logs_ - returns all the logs<br>
+_/doc_logs_ - returns all the doc logs by id<br>
+
 <br>
 
 ### BDS Details
