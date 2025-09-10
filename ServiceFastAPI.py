@@ -1,9 +1,6 @@
-import json
-
-import uvicorn
-
 from DALs.ElasticSearch_DAL import Elastic
 from fastapi import FastAPI
+import uvicorn
 
 
 app =FastAPI() # instance of FastAPI server
