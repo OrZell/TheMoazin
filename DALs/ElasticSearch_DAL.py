@@ -1,3 +1,4 @@
+from configuerations import ELASTICSEARCH_DOCS_INDEX_MAP
 from elasticsearch import Elasticsearch, helpers
 from Models.Logger import Logger
 import os
@@ -15,32 +16,7 @@ class Elastic:
 
         self.connection = None
 
-        self.Map = {
-            'mappings': {
-                'properties': {
-                    'id': {'type': 'keyword'},
-                    'text': {'type': 'text'},
-                    'bds_precent': {'type': 'float'},
-                    'is_bds': {'type': 'boolean'},
-                    'bds_thread_level': {'type': 'keyword'},
-                    'name': {'type': 'keyword'},
-                    'file_path': {'type': 'keyword'},
-                    'size': {'type': 'keyword'},
-                    'create_date': {
-                        'type': 'date',
-                        'format': 'yyyy-MM-dd HH:mm:ss'
-                    },
-                    'modified_date': {
-                        'type': 'date',
-                        'format': 'yyyy-MM-dd HH:mm:ss'
-                    },
-                    'last_access': {
-                        'type': 'date',
-                        'format': 'yyyy-MM-dd HH:mm:ss'
-                    }
-                }
-            }
-        }
+        self.Map = ELASTICSEARCH_DOCS_INDEX_MAP
 
     def open_connection(self):
         if self.connection is None:
