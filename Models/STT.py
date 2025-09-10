@@ -12,6 +12,6 @@ class STT:
         with audio_data as audio_file:
             data = self.Recognizer.record(audio_file)
 
-        text = self.Recognizer.recognize_google(data).lower() # use the Google service to convert to txet
+        text = self.Recognizer.recognize_google(data).lower() # use the Google service to convert to text and return it lowercase
         return text
 

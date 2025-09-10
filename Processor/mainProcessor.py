@@ -1,5 +1,5 @@
 from dotenv import load_dotenv, find_dotenv
-from Manager_STT import Manager
+from Manager_Processor import Manager
 
 load_dotenv(find_dotenv()) # load the env vars using the dotenv library
 

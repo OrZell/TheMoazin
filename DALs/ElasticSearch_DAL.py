@@ -1,3 +1,6 @@
+from operator import index
+
+from configuerations import ELASTICSEARCH_DOCS_INDEX_MAP
 from elasticsearch import Elasticsearch, helpers
 from Models.Logger import Logger
 import os
@@ -12,32 +15,11 @@ class Elastic:
         self.Port = os.getenv('ELASTICSEARCH_PORT')
         self.ConnectString = os.getenv('ELASTICSEARCH_CONNECTION_STRING')
         self.IndexName = os.getenv('ELASTICSEARCH_DOCS_INDEX')
+        self.LogsIndexName = os.getenv('ELASTICSEARCH_LOGS_INDEX')
 
         self.connection = None
 
-        self.Map = {
-            'mappings': {
-                'properties': {
-                    'id': {'type': 'keyword'},
-                    'text': {'type': 'text'},
-                    'name': {'type': 'keyword'},
-                    'file_path': {'type': 'keyword'},
-                    'size': {'type': 'keyword'},
-                    'create_date': {
-                        'type': 'date',
-                        'format': 'yyyy-MM-dd HH:mm:ss'
-                    },
-                    'modified_date': {
-                        'type': 'date',
-                        'format': 'yyyy-MM-dd HH:mm:ss'
-                    },
-                    'last_access': {
-                        'type': 'date',
-                        'format': 'yyyy-MM-dd HH:mm:ss'
-                    }
-                }
-            }
-        }
+        self.Map = ELASTICSEARCH_DOCS_INDEX_MAP
 
     def open_connection(self):
         if self.connection is None:
@@ -81,6 +63,17 @@ class Elastic:
         self.close_connection()
         return result
 
+    def fetch_all_from_logs(self):
+        connection = self.open_connection()
+
+        query = {
+            'match_all': {}
+        }
+
+        result = connection.search(index=self.LogsIndexName, query=query, size=1000)
+        self.close_connection()
+        return result
+
     def search_word_in_text(self, word):
         connection = self.open_connection()
 
@@ -94,6 +87,22 @@ class Elastic:
         result = connection.search(index=self.IndexName, body=query)
 
         self.close_connection()
+        return result
+
+    def search_by_query(self, query):
+        connection = self.open_connection()
+
+        result = connection.search(index=self.IndexName, body=query, size=1000)
+        self.close_connection()
+
+        return result
+
+    def search_by_query_in_logs(self, query):
+        connection = self.open_connection()
+
+        result = connection.search(index=self.LogsIndexName, body=query, size=1000)
+        self.close_connection()
+
         return result
 
     def delete_list_of_docs(self, docs):
